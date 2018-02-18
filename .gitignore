@@ -30,3 +30,9 @@
 *.exe
 *.out
 *.app
+
+# external libs folder (should not be included in git)
+extern/
+
+# generated project 
+vs_project/
