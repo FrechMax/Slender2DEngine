@@ -47,6 +47,12 @@ find_package( Boost 1.60 COMPONENTS unit_test_framework REQUIRED )
 link_directories ( ${Boost_LIBRARY_DIRS} )
 include_directories ( ${Boost_INCLUDE_DIRS} )
 
+# SDL2
+set (SDL2_DIR ${PROJECT_EXTERN_DIR}/SDL2-2.0.7)
+find_package(SDL2 REQUIRED)
+
+include_directories(${SDL2_INCLUDE_DIRS})
+
 ###################################################################
 # Setup internal Files
 ###################################################################
@@ -67,6 +73,7 @@ endfunction()
 # The following macro contains all Slender2D .cpp files rel. to source directory
 set(SOURCE_FILES 
 	FileUtility.cpp
+	Game/GameLoop.cpp
 )
 
 # the following macro contains all Slender2D test files
@@ -96,11 +103,11 @@ include_directories(${PROJECT_HEADERS_DIR})
 ###################################################################
 # Create a Slender2D Package
 ###################################################################
-add_library(Slender2D STATIC ${ABS_SOURCE_FILES} ${ABS_HEADER_FILES})
+add_library(Slender2D SHARED ${ABS_SOURCE_FILES} ${ABS_HEADER_FILES})
 
 # link libraries together
-target_link_libraries(Slender2D
-	# SDL2 later on
+target_link_libraries(Slender2D 
+	${SDL2_LIBRARIES}
 )
 
 ###################################################################
@@ -110,7 +117,9 @@ add_executable(Slender2DTest ${ABS_TEST_FILES})
 
 set_target_properties(Slender2DTest PROPERTIES RUNTIME_OUTPUT_DIRECTORY bin)
 set_target_properties(Slender2DTest PROPERTIES LIBRARY_OUTPUT_DIRECTORY lib)
-target_link_libraries(Slender2DTest Slender2D ${Boost_LIBRARIES})
+target_link_libraries(Slender2DTest 
+	Slender2D ${Boost_LIBRARIES}
+)
 
 ###################################################################
 # Create Game Project using Slender2D

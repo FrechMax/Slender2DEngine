@@ -36,3 +36,6 @@ extern/
 
 # generated project 
 vs_project/
+
+# output directory
+bin/
