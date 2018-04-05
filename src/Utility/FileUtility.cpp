@@ -1,8 +1,8 @@
-#include "FileUtility.h"
+#include "Utility/FileUtility.h"
 
 #include <fstream>
 
-using namespace Utility;
+using namespace S2D::Utility;
 
 IOFile::IOFile(std::string filename)
 {
@@ -28,7 +28,7 @@ void IOFile::open(int mode)
 	mIOStream.open(mFilename.c_str(), modeFlags);
 }
 
-bool Utility::IOFile::isOpen()
+bool IOFile::isOpen()
 {
 	return mIOStream.is_open();
 }

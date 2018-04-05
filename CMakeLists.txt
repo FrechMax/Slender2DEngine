@@ -16,6 +16,10 @@ project(Slender2D LANGUAGES CXX)
 if(MSVC)
   set(CMAKE_EXE_LINKER_FLAGS
       "${CMAKE_EXE_LINKER_FLAGS} /NODEFAULTLIB:library")
+
+
+	set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+
 endif()
 
 ###################################################################
@@ -53,6 +57,11 @@ find_package(SDL2 REQUIRED)
 
 include_directories(${SDL2_INCLUDE_DIRS})
 
+set (SDL2_IMAGE_DIR ${PROJECT_EXTERN_DIR}/SDL2_image-2.0.3)
+find_package(SDL2_IMAGE REQUIRED)
+
+include_directories(${SDL2_IMAGE_INCLUDE_DIRS})
+
 ###################################################################
 # Setup internal Files
 ###################################################################
@@ -70,21 +79,25 @@ function(prefix_list outputList prefix list)
 	set(${outputList} "${tempList}" PARENT_SCOPE)
 endfunction()
 
+# The following macro contains all Slender2D .hpp files
+set(HEADER_FILES 
+	Utility/Fileutility.h
+	Utility/IdDispatcher.h
+	Core/Framework.h
+	Core/Event/PostSubscribeEvent.h
+)
+
 # The following macro contains all Slender2D .cpp files rel. to source directory
 set(SOURCE_FILES 
-	FileUtility.cpp
-	Game/GameLoop.cpp
+	Utility/FileUtility.cpp
+	Core/Framework.cpp
+
 )
 
 # the following macro contains all Slender2D test files
 set(TEST_FILES
 	FileUtilityTest.cpp
-)
-
-# The following macro contains all Slender2D .hpp files
-set(HEADER_FILES 
-	Fileutility.h
-	Game/GameLoop.h
+	PublisherSubscriberTest.cpp
 )
 
 # Produce list of absolute path 
@@ -105,9 +118,10 @@ include_directories(${PROJECT_HEADERS_DIR})
 ###################################################################
 add_library(Slender2D SHARED ${ABS_SOURCE_FILES} ${ABS_HEADER_FILES})
 
+
 # link libraries together
 target_link_libraries(Slender2D 
-	${SDL2_LIBRARIES}
+	${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES}
 )
 
 ###################################################################
